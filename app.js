@@ -11,6 +11,8 @@ require('dotenv').config();
 
 const auth = require('./routes/auth');
 
+const mediaRouter = require("./routes/media-routes");
+
 
 // MONGOOSE CONNECTION
 mongoose
@@ -61,22 +63,23 @@ app.use(
 // MIDDLEWARE
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 // ROUTER MIDDLEWARE
 app.use('/auth', auth);
+app.use("/api", mediaRouter);
 
-
-// 404 
+// 404 // ALWAYS LAST
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404).json({ code: 'not found' });
 });
 
-// ERROR HANDLING
+
+// ERROR HANDLING // ALWAYS LAST
 app.use((err, req, res, next) => {
   // always log the error
   console.error('ERROR', req.method, req.path, err);

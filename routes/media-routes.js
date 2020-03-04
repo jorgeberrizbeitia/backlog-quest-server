@@ -1,57 +1,100 @@
 //      routes/project-routes.js
-const express = require('express');
-const mongoose = require('mongoose');
-const router  = express.Router();
+const express = require("express");
+const mongoose = require("mongoose");
+const router = express.Router();
 
-const Media = require('../models/user-model');
+const Media = require("../models/media-model");
 
-// POST '/search/add'
-router.post('/search/add', (req,res) => {
-    const { title, type, platform } = req.body;
-  
-    const userId = req.session.currentUser._id
+// HELPER FUNCTIONS
+const { isLoggedIn } = require("../helpers/middlewares"); // to check if user is loggedIn
 
-    Media.create({ title, type, platform, user: userId })
-      .then((response)=> {
-        res
-          .status(201)
-          .json(response);
-        // `res.json` is similar to ->  `res.send( JSON.stringify(response) )`
-      })
-      .catch((err)=> {
-        res
-          .status(500)  // Internal Server Error
-          .json(err)
-      })
-  })
+// POST '/search/add'      => to add a new media element
+router.post("/search/add", (req, res) => { 
+  const { title, type, done, platform, user} = req.body;
 
-  // GET '/backlog'		 => to get all the media
-router.get('/projects', (req, res, next) => {
-    Project.find().populate('user')
-      .then(allTheMedia => {
-        res.json(allTheMedia);
-      })
-      .catch(err => {
-        res.json(err);
-      })
-  });
+  // const userId = req.session.currentUser._id;
 
-  // DELETE '/api/projects/:id'   => to delete a specific project
-router.delete('/projects/:id', (req, res)=>{
-    const { id } = req.params;
-  
-    if ( !mongoose.Types.ObjectId.isValid(id)) {
-      res.status(400).json({ message: 'Specified id is not valid' });
-      return;
-    }
-  
-    Project.findByIdAndRemove(id)
-      .then(() => {
-        res
-          .status(202)  //  Accepted
-          .json({ message: `Project with ${id} was removed successfully.` });
-      })
-      .catch( err => {
-        res.status(500).json(err);
-      })
-  })
+  Media.create({ title, type, done, platform, user })
+    .then(response => {
+      res.status(201).json(response);
+      // `res.json` is similar to ->  `res.send( JSON.stringify(response) )`
+    })
+    .catch(err => {
+      res
+        .status(500) // Internal Server Error
+        .json(err);
+    });
+});
+
+// GET '/backlog'		 => to get all the media elements
+router.get("/backlog", (req, res, next) => {
+  Media.find()
+    .then(allTheMedia => {
+      console.log(allTheMedia)
+      res.json(allTheMedia);
+    })
+    .catch(err => {
+      console.log(err)
+      res.json(err);
+    });
+});
+
+// GET '/api/media/:id'		 => to get a specific media element
+router.get("/media/:id", (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res
+      .status(400) //  Bad Request
+      .json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Media.findById(id)
+    .then(foundMedia => {
+      res.status(200).json(foundMedia);
+    })
+    .catch(err => {
+      res.res.status(500).json(err);
+    });
+});
+
+// PUT '/api/media/:id' 		=> to update a specific media element
+router.put("/media/:id", (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Media.findByIdAndUpdate(req.params.id, req.body)
+    .then(() => {
+      res.json({
+        message: `Media with ${req.params.id} is updated successfully.`
+      });
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
+// DELETE '/api/media/:id'   => to delete a specific media element
+router.delete("/media/:id", (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Media.findByIdAndRemove(id)
+    .then(() => {
+      res
+        .status(202) //  Accepted
+        .json({ message: `Media with ${id} was removed successfully.` });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+module.exports = router;
