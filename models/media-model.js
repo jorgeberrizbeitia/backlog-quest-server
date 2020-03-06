@@ -7,6 +7,10 @@ const mediaSchema = new Schema(
     type: { type: String, required: true, enum: ['Film', 'Series']},
     done: { type: Boolean },
     platform: { type: String, required: true, enum: ['Netflix', 'Amazon Prime', 'Disney+', 'HBO Now', 'Plex', 'Other'] },
+    image: { type: String },
+    ranking: { type: String },
+    description: { type: String },
+    releaseDate: { String },
     user: { type: Schema.Types.ObjectId, ref: "User" }
   },
   {

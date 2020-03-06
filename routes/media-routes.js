@@ -9,14 +9,15 @@ const Media = require("../models/media-model");
 const { isLoggedIn } = require("../helpers/middlewares"); // to check if user is loggedIn
 
 // POST '/search/add'      => to add a new media element
-router.post("/search/add", (req, res) => { 
-  const { title, type, done, platform, user} = req.body;
+router.post("/add", isLoggedIn, (req, res) => { 
+  const { title, type, done, platform, image, ranking, description, releaseDate } = req.body;
 
-  // const userId = req.session.currentUser._id;
+  const user = req.session.currentUser._id;
 
-  Media.create({ title, type, done, platform, user })
+  Media.create({ title, type, done, platform, image, ranking, description, releaseDate, user })
     .then(response => {
       res.status(201).json(response);
+      console.log("Film created:", response)
       // `res.json` is similar to ->  `res.send( JSON.stringify(response) )`
     })
     .catch(err => {
@@ -27,10 +28,13 @@ router.post("/search/add", (req, res) => {
 });
 
 // GET '/backlog'		 => to get all the media elements
-router.get("/backlog", (req, res, next) => {
-  Media.find()
+router.get("/backlog", isLoggedIn, (req, res, next) => {
+
+  const user = req.session.currentUser._id;
+
+  Media.find({ user: user })
     .then(allTheMedia => {
-      console.log(allTheMedia)
+      allTheMedia.map(e => console.log(e.title))
       res.json(allTheMedia);
     })
     .catch(err => {
@@ -65,8 +69,8 @@ router.put("/media/:id", (req, res, next) => {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
-
-  Media.findByIdAndUpdate(req.params.id, req.body)
+  const { platform } = req.body
+  Media.findByIdAndUpdate(req.params.id, {platform} )
     .then(() => {
       res.json({
         message: `Media with ${req.params.id} is updated successfully.`
