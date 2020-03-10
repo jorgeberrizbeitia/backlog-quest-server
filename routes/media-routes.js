@@ -69,16 +69,32 @@ router.put("/media/:id", (req, res, next) => {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
   }
-  const { platform } = req.body
-  Media.findByIdAndUpdate(req.params.id, {platform} )
-    .then(() => {
-      res.json({
-        message: `Media with ${req.params.id} is updated successfully.`
+
+  if (req.body.platform !== undefined) {
+    // route to update platform
+    const { platform } = req.body
+    Media.findByIdAndUpdate(req.params.id, {platform} )
+      .then(() => {
+        res.json({
+          message: `Media with ${req.params.id} is updated successfully.`
+        });
+      })
+      .catch(err => {
+        res.json(err);
       });
-    })
-    .catch(err => {
-      res.json(err);
-    });
+  } else if (req.body.done !== undefined) {
+    // route to update done status
+    const { done } = req.body
+    Media.findByIdAndUpdate(req.params.id, {done} )
+      .then(() => {
+        res.json({
+          message: `Media with ${req.params.id} is updated successfully.`
+        });
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  }
 });
 
 // DELETE '/api/media/:id'   => to delete a specific media element
