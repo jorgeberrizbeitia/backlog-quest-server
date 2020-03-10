@@ -10,7 +10,7 @@ const mediaSchema = new Schema(
     image: { type: String },
     ranking: { type: String },
     description: { type: String },
-    releaseDate: { String },
+    releaseDate: { type: Date },
     user: { type: Schema.Types.ObjectId, ref: "User" }
   },
   {

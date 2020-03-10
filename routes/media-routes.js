@@ -32,7 +32,23 @@ router.get("/backlog", isLoggedIn, (req, res, next) => {
 
   const user = req.session.currentUser._id;
 
-  Media.find({ user: user })
+  Media.find({ user: user, done: false })
+    .then(allTheMedia => {
+      allTheMedia.map(e => console.log(e.title))
+      res.json(allTheMedia);
+    })
+    .catch(err => {
+      console.log(err)
+      res.json(err);
+    });
+});
+
+// GET '/done'		 => to get all the media elements
+router.get("/done", isLoggedIn, (req, res, next) => {
+
+  const user = req.session.currentUser._id;
+
+  Media.find({ user: user, done: true })
     .then(allTheMedia => {
       allTheMedia.map(e => console.log(e.title))
       res.json(allTheMedia);
