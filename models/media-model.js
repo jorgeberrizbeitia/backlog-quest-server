@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 const mediaSchema = new Schema(
   {
     title: { type: String, required: true },
-    type: { type: String, required: true, enum: ['Film', 'Series']},
+    type: { type: String, required: true, enum: ['Film', 'Series', "Game"]},
     done: { type: Boolean },
-    platform: { type: String, required: true, enum: ['Netflix', 'Amazon Prime', 'Disney+', 'HBO Now', 'Plex', 'Other'] },
+    platform: { type: String, required: true, enum: ['Netflix', 'Amazon Prime', 'Disney+', 'HBO Now', 'Plex', 'Other', "Xbox", "Playstation", "Switch", "PC", "Other"] },
     image: { type: String },
     ranking: { type: String },
     description: { type: String },

@@ -36,6 +36,7 @@ router.get("/:id", isLoggedIn, (req, res) => {
       return;
     }
   
+
       // route to update platform
       const { platforms } = req.body
       User.findByIdAndUpdate(req.params.id, {platforms} )

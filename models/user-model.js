@@ -6,7 +6,8 @@ const userSchema = new Schema(
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     platforms: [ { type: String, enum: ['Netflix', 'Amazon Prime', 'Disney+', 'HBO Now', 'Plex', 'Other'] } ],
-    media: [ { type: Schema.Types.ObjectId, ref: "Media" } ]
+    consoles: [ { type: String, enum: ["Xbox", "Playstation", "Switch", "PC", "Other"] } ],
+    media: [ { type: Schema.Types.ObjectId, ref: "Media" } ] // Will be implemented later
   },
   {
     timestamps: {

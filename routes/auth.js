@@ -18,7 +18,7 @@ router.post(
   isNotLoggedIn,
   validationLogin,
   async (req, res, next) => {
-    const { username, password, platforms } = req.body;
+    const { username, password, platforms, consoles } = req.body;
     try {
       // projection
       const usernameExists = await User.findOne({ username }, "username");
@@ -30,7 +30,8 @@ router.post(
         const newUser = await User.create({
           username,
           password: hashPass,
-          platforms
+          platforms,
+          consoles
         });
 
         newUser.password = "*";
