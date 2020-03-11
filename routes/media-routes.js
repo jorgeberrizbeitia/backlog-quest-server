@@ -60,7 +60,7 @@ router.get("/done", isLoggedIn, (req, res, next) => {
 });
 
 // GET '/api/media/:id'		 => to get a specific media element
-router.get("/media/:id", (req, res) => {
+router.get("/media/:id", isLoggedIn, (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -80,7 +80,7 @@ router.get("/media/:id", (req, res) => {
 });
 
 // PUT '/api/media/:id' 		=> to update a specific media element
-router.put("/media/:id", (req, res, next) => {
+router.put("/media/:id", isLoggedIn, (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
@@ -114,7 +114,7 @@ router.put("/media/:id", (req, res, next) => {
 });
 
 // DELETE '/api/media/:id'   => to delete a specific media element
-router.delete("/media/:id", (req, res) => {
+router.delete("/media/:id", isLoggedIn, (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {

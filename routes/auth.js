@@ -86,4 +86,6 @@ router.get("/me", isLoggedIn, (req, res, next) => {
   res.status(200).json(currentUserSessionData);
 });
 
+// PUT '/auth/profile/:id
+
 module.exports = router;
