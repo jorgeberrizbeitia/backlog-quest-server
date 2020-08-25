@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 
-const User = require("../models/user-model");
+const User = require("../models/UserModel");
 
 // HELPER FUNCTIONS
 const { isLoggedIn } = require("../helpers/middlewares"); // to check if user is loggedIn
@@ -38,8 +38,8 @@ router.get("/:id", isLoggedIn, (req, res) => {
   
 
       // route to update platform
-      const { platforms } = req.body
-      User.findByIdAndUpdate(req.params.id, {platforms} )
+      const { platforms, consoles } = req.body
+      User.findByIdAndUpdate(req.params.id, {platforms, consoles} )
         .then(() => {
           res.json({
             message: `Media with ${req.params.id} is updated successfully.`

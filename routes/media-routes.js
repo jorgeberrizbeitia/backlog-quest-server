@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 
-const Media = require("../models/media-model");
+const Media = require("../models/MediaModel");
 
 // HELPER FUNCTIONS
 const { isLoggedIn } = require("../helpers/middlewares"); // to check if user is loggedIn
@@ -17,7 +17,7 @@ router.post("/add", isLoggedIn, (req, res) => {
   Media.create({ title, type, done, platform, image, ranking, description, releaseDate, user })
     .then(response => {
       res.status(201).json(response);
-      console.log("Film created:", response)
+      console.log("Media created:", response)
       // `res.json` is similar to ->  `res.send( JSON.stringify(response) )`
     })
     .catch(err => {

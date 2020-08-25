@@ -3,13 +3,13 @@ const router = express.Router();
 const createError = require("http-errors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const User = require("../models/user-model");
+const User = require("../models/UserModel");
 
 // HELPER FUNCTIONS
 const {
   isLoggedIn,
   isNotLoggedIn,
-  validationLogin
+  validationLogin,
 } = require("../helpers/middlewares");
 
 // POST '/auth/signup'
@@ -18,20 +18,19 @@ router.post(
   isNotLoggedIn,
   validationLogin,
   async (req, res, next) => {
-    const { username, password, platforms, consoles } = req.body;
+    const { username, password, platforms } = req.body;
     try {
       // projection
       const usernameExists = await User.findOne({ username }, "username");
-
-      if (usernameExists) return next(createError(400));
+      console.log(usernameExists)
+      if (usernameExists) return next(createError(409, "Username taken"));
       else {
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashPass = bcrypt.hashSync(password, salt);
         const newUser = await User.create({
           username,
           password: hashPass,
-          platforms,
-          consoles
+          platforms: [...platforms, "Other"], // Adding "Other" as default
         });
 
         newUser.password = "*";
@@ -40,7 +39,8 @@ router.post(
           .status(201) //  Created
           .json(newUser);
       }
-    } catch (error) {
+    } 
+    catch (error) {
       next(createError(error));
     }
   }
@@ -79,10 +79,10 @@ router.post("/logout", isLoggedIn, (req, res, next) => {
     .send();
 });
 
-// GET '/auth/me'
+// GET '/auth/me' for verifying user session on every page
 router.get("/me", isLoggedIn, (req, res, next) => {
   const currentUserSessionData = req.session.currentUser;
-  currentUserSessionData.password = "*";
+  currentUserSessionData.password = "*"; // to not share password
 
   res.status(200).json(currentUserSessionData);
 });

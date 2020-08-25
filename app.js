@@ -9,7 +9,7 @@ const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
 require("dotenv").config();
 
-const auth = require("./routes/auth");
+const auth = require("./routes/auth-routes");
 
 const mediaRouter = require("./routes/media-routes");
 const profileRouter = require("./routes/profile-routes");
@@ -27,7 +27,7 @@ mongoose
 // EXPRESS SERVER INSTANCE
 const app = express();
 
-// CORS MIDDLEWARE SETUP
+// CORS MIDDLEWARE SETUP. For allowing free connection to front-end
 app.use(
   cors({
     credentials: true,
