@@ -36,13 +36,12 @@ router.get("/:id", isLoggedIn, (req, res) => {
       return;
     }
   
-
-      // route to update platform
-      const { platforms, consoles } = req.body
-      User.findByIdAndUpdate(req.params.id, {platforms, consoles} )
+      // route to update platforms
+      const { platforms } = req.body
+      User.findByIdAndUpdate(req.params.id, { platforms } )
         .then(() => {
           res.json({
-            message: `Media with ${req.params.id} is updated successfully.`
+            message: `User updated`
           });
         })
         .catch(err => {

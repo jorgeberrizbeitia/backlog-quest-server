@@ -30,7 +30,7 @@ router.post(
         const newUser = await User.create({
           username,
           password: hashPass,
-          platforms: [...platforms, "Other"], // Adding "Other" as default
+          platforms
         });
 
         newUser.password = "*";
